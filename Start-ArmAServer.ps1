@@ -79,7 +79,8 @@ function main {
 }
 
 function Start-ArmAServer($mods) {
-    ./arma3server_x64.exe "-name=server" "-config=server.cfg" "-cfg=basic.cfg" "-mod=$mods"}
+    ./arma3server_x64.exe "-name=server" "-config=server.cfg" "-cfg=basic.cfg" "-mod=$mods" "-servermods=@AdvancedUrbanRappelling;@AdvancedRappelling;@AdvancedSlingLoading;@AdvancedTowing"
+}
 
 function Stop-ArmaServer {
     if (Test-Running -ne 1) {
