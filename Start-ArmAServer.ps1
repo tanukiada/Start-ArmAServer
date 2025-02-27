@@ -11,17 +11,8 @@
     .PARAMETER StopServer
     Stops The server, as usual checking if it's actually running first
 
-    .PARAMETER New
-    Creates new preset folder and moves all mods currently in main directory into it
-
-    .PARAMETER Enable
-    Moves named preset from it's sub directory to main directory
-
-    .PARAMETER Disable
-    Moves named preset from main directory to sub directory
-
-    .PARAMETER Switch
-    Moves first named preset into it's sub folder and second named preset into main folder
+    .PARAMETER ModList
+    Sets active commandline based on textfile listed
 #>
 
 param (
@@ -29,9 +20,7 @@ param (
     [switch]$RestartServer,
     [switch]$StopServer,
     [string]$New,
-    [string]$Enable,
-    [string]$Disable,
-    [string[]]$Switch
+    [string[]]$ModList
 )
 
 function main {
@@ -60,22 +49,7 @@ function main {
         }
         
     }
-    
-    if ($New) {
-        New-Preset
-    }
 
-    if ($Enable) {
-        Enable-Preset($Enable)
-    }
-    
-    if ($Disable) {
-        Disable-Preset($Disable)
-    }
-    
-    if ($Switch) {
-        Switch-Preset($Switch[0], $Switch[1])
-    }
 }
 
 function Start-ArmAServer($mods) {
@@ -90,37 +64,13 @@ function Stop-ArmaServer {
     }
 }
 
-function New-Preset {
-    New-Item -Path "C:\arma3\" -Name "PRESET_$New" -ItemType "directory"
-
-    $modlist = Get-ChildItem "C:\arma3" | where-object {$_.Name -like '@*'}
-    $modlist -join ';' | Out-File 'mods.txt'
-}
-
 function Get-Mods {
-    if ((Test-Path -Path .\mods.txt)) {
-        return Get-Content -Path .\mods.txt
+    if ((Test-Path -Path .\$ModList)) {
+        return Get-Content -Path .\$ModList
     } else {
-        Write-Error -Message "No mods.txt. Does it exist?" -Category ResourceUnavailable
+        Write-Error -Message "No mods text file. Does it exist?" -Category ResourceUnavailable
         Exit
     }
-}
-
-function Enable-Preset($preset) {
-    Move-Item -Path "C:\arma3\$preset\@*" -Destination "C:\arma3\"
-    Move-Item -Path "C:\arma3\$preset\mods.txt" -Destination "C:\arma3\"
-}
-
-function Disable-Preset($presetDisable) {
-    Move-Item -Path "C:\arma3\@*" -Destination $presetDisable
-    Move-Item -Path "C:\arma3\mods.txt" -Destination $presetDisable
-}
-
-function Switch-Preset($oldPreset, $newPreset) {
-    Move-Item -Path "$newPreset/@*" -Destination "C:\arma3\"
-    Move-Item -Path "$newPreset/mods.txt" -Destination "C:\arma3\" -Force
-    Move-Item -Path "c:\arma3\@*" -Destination $oldPreset -Force
-    Move-Item -Path "c:\arma3\mods.txt" -Destination $oldPreset -Force
 }
 
 function Get-PID {
