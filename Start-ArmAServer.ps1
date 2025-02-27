@@ -79,7 +79,7 @@ function main {
 }
 
 function Start-ArmAServer($mods) {
-    ./arma3server_x64.exe "-name=server" "-config=server.cfg" "-cfg=basic.cfg" "-mod=$mods" "-servermods=@AdvancedUrbanRappelling;@AdvancedRappelling;@AdvancedSlingLoading;@AdvancedTowing"
+    ./arma3server_x64.exe "-name=server" "-filePatching" "-config=server.cfg" "-cfg=basic.cfg" "-mod=$mods" "-servermod=@AdvancedUrbanRappelling;@AdvancedRappelling;@AdvancedSlingLoading;@AdvancedTowing"
 }
 
 function Stop-ArmaServer {
@@ -91,9 +91,9 @@ function Stop-ArmaServer {
 }
 
 function New-Preset {
-    New-Item -Path "C:\Arma 3\" -Name "PRESET_$New" -ItemType "directory"
+    New-Item -Path "C:\arma3\" -Name "PRESET_$New" -ItemType "directory"
 
-    $modlist = Get-ChildItem "C:\Arma 3" | where-object {$_.Name -like '@*'}
+    $modlist = Get-ChildItem "C:\arma3" | where-object {$_.Name -like '@*'}
     $modlist -join ';' | Out-File 'mods.txt'
 }
 
@@ -107,20 +107,20 @@ function Get-Mods {
 }
 
 function Enable-Preset($preset) {
-    Move-Item -Path "C:\Arma 3\$preset\@*" -Destination "C:\Arma 3\"
-    Move-Item -Path "C:\Arma 3\$preset\mods.txt" -Destination "C:\Arma 3\"
+    Move-Item -Path "C:\arma3\$preset\@*" -Destination "C:\arma3\"
+    Move-Item -Path "C:\arma3\$preset\mods.txt" -Destination "C:\arma3\"
 }
 
 function Disable-Preset($presetDisable) {
-    Move-Item -Path "C:\Arma 3\@*" -Destination $presetDisable
-    Move-Item -Path "C:\Arma 3\mods.txt" -Destination $presetDisable
+    Move-Item -Path "C:\arma3\@*" -Destination $presetDisable
+    Move-Item -Path "C:\arma3\mods.txt" -Destination $presetDisable
 }
 
 function Switch-Preset($oldPreset, $newPreset) {
-    Move-Item -Path "$newPreset/@*" -Destination "C:\Arma 3\"
-    Move-Item -Path "$newPreset/mods.txt" -Destination "C:\Arma 3\" -Force
-    Move-Item -Path "c:\Arma 3\@*" -Destination $oldPreset -Force
-    Move-Item -Path "c:\Arma 3\mods.txt" -Destination $oldPreset -Force
+    Move-Item -Path "$newPreset/@*" -Destination "C:\arma3\"
+    Move-Item -Path "$newPreset/mods.txt" -Destination "C:\arma3\" -Force
+    Move-Item -Path "c:\arma3\@*" -Destination $oldPreset -Force
+    Move-Item -Path "c:\arma3\mods.txt" -Destination $oldPreset -Force
 }
 
 function Get-PID {
