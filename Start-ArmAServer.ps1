@@ -65,8 +65,8 @@ function Stop-ArmaServer {
 }
 
 function Get-Mods {
-    if ((Test-Path -Path .\$ModList)) {
-        return Get-Content -Path .\$ModList
+    if ((Test-Path -Path $ModList)) {
+        return Get-Content -Path $ModList
     } else {
         Write-Error -Message "No mods text file. Does it exist?" -Category ResourceUnavailable
         Exit
